@@ -16,3 +16,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: ./.github/scripts/hello_world.sh
+  upload-example:
+    name: Save output
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./.github/scripts/hello_world.sh > output.log
+      - name: Upload output file
+        uses: actions/upload-artifact@v3
+        with:
+          name: output-log-file
+          path: output.log
+  download-example:
+    name: Use output
+    needs: upload-example
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: output-log-file
+      - run: cat output.log
+
